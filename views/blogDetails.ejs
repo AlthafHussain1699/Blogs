@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <%- include('./partials/navBar') %>
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h4><%= blog.title %></h4>
+              <div class = "d-flex">
+                <a href="/blog/updateBlogForm/<%= blog._id %>" class="btn btn-primary btn-sm mr-2">Edit</a>
+                <a href="/blog/deleteBlog/<%= blog._id %>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Blog');">Delete</a>
+               </div>
+            </div>
+            <div class="card-body">
+                <img src="<%= blog.coverImageUrl %>" class="card-img-top img-fluid" alt="Cover Image for <%= blog.title %>">
+                <pre class="card-text mt-3"><%= blog.body %></pre>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-header text-right">
+                <a href="/comment/addCommentForm/<%= blog._id %>" class="btn btn-primary">Comment</a>
+            </div>
+        </div>
+    </div>
+    
+    <% if (locals.comments) { %>
+        <% comments.forEach(comment => { %>
+            <div class="container mt-3 pb-3">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <img src="<%= comment.createdBy.profileImageUrl %>" width="30px" alt="Profile">
+                            <p><%= comment.createdBy.name %></p>
+                        </div>
+                        <div class = "d-flex">
+                        <% if (locals.user._id == comment.createdBy._id) { %>
+                            <a href="/comment/updateCommentForm/<%= comment._id %>" class="btn btn-primary btn-sm mr-2">Edit</a>
+                            <form action="/comment/deleteComment/<%= comment._id %>" onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        <% } %>
+                         </div>
+                    </div>
+                    <div class="card-body">
+                        <pre><%= comment.comment %></pre>
+                    </div>
+                </div>
+            </div>
+            
+         <% }) %>
+    <% } %>
+    
+    <%- include('./partials/script') %>
+</body>
+</html>

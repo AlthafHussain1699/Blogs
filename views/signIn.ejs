@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid d-flex justify-content-between">
+
+      <div class="d-flex align-items-center">
+        <a class="navbar-brand" href="#">Blogs</a>
+        <% if (locals.user) { %>
+          <a class="nav-link text-light ms-3" href="/blog/blogForm">Add Blog</a>
+        <% } %>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <% if (locals.user) { %>
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= locals.user.name %>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/user/logout">LogOut</a></li>
+              </ul>
+            </li>
+          </ul>
+        <% } else { %>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/user/signIn">SignIn</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/signUp">SignUp</a>
+            </li>
+          </ul>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+  
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title text-center">Sign In</h5>
+              <form action= "/user/userValidation" method="GET">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name = "name"  required>
+                  </div>
+                <div class="form-group">
+                  <label for="email">Email address</label>
+                  <input type="email" class="form-control" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" name ="password" required>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="/user/resetPasswordPage">Forgot Password</a>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary mt-3">Sign In</button>
+                    </div>
+                </div>                
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('./partials/script') %>
+</body>
+</html>
