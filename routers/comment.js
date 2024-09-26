@@ -24,6 +24,9 @@ route.post('/updateComment/:commentId', async (req, res)=>{
     }
     const options = { new: true }; 
     const commentEntity = await Comment.findOneAndUpdate(filter, update, options);
+    const blog = await Blog.findById(blogIdValue);
+     blog.comments -= 1;
+     await blog.save();
     res.redirect(`/blog/blogDetails/${commentEntity.blogId}`)
 })
 
@@ -41,6 +44,9 @@ route.post('/addComment/:blogId', async (req, res)=>{
         createdBy : req.user._id,
         blogId : blogIdValue
      })
+     const blog = await Blog.findById(blogIdValue);
+     blog.comments += 1;
+     await blog.save();
      res.redirect(`/blog/blogDetails/${blogIdValue}`)
 })
 

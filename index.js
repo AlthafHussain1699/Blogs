@@ -9,6 +9,7 @@ const path = require('path')
 const Blog = require('./models/blog');
 
 
+
 const url = "mongodb://localhost:27017/";
 const port = 3000;
 
@@ -26,8 +27,18 @@ app.use("/user", userRoute);
 app.use("/blog", requiredAuthantication("Token"), blogRoute);
 app.use("/comment", commentRoute);
 app.get("/", async (req, res) => {
-    const allBlogs = await Blog.find({})
-    res.render("home", { user : req.user, blogs : allBlogs});
+    const Blogs = await Blog.find({});
+    for (const blog of Blogs) {
+        const arr = blog.likes.map(like => like.userId.toString());
+
+        if (req.user) {
+            const idx = arr.includes(req.user._id.toString()); 
+            blog.like = idx ? 1 : 0; 
+        } else {
+            blog.like = 0;
+        }
+    }
+    res.render("home", { user : req.user, blogs : Blogs});
 });
 
 app.listen(port, ()=>{

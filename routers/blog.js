@@ -3,9 +3,6 @@ const multer = require("multer");
 const Blog= require('../models/blog')
 const {Comment} = require('../models/comment')
 
-const {requiredAuthantication } = require('../middlewares/authantication');
-
-
 const route = Router();
 
 const storage = multer.diskStorage({
@@ -20,8 +17,6 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage : storage
 })
-
-
 route.get('/blogForm', (req, res)=>{
     res.render('addBlog', { user : req.user })
 })
@@ -61,7 +56,6 @@ route.get('/deleteBlog/:blogId', async (req, res)=>{
     res.redirect(`/`)
 })
 
-
 route.post('/addBlog', upload.single('coverImage'), async (req, res)=>{
     const {title, body} = req.body;
     const userId = req.user._id
@@ -96,4 +90,29 @@ route.get('/showMyBlogs', async (req, res)=>{
     res.render('home', {user : req.user, blogs : blogEntities})
 })
 
+route.post('/like/:id', async (req, res) => {
+    const blogId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const blog = await Blog.findById(blogId);
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog post not found' });
+        }
+        const userIndex = blog.likes.findIndex(like => like.userId.toString() === userId);
+        value = 0;
+        if (userIndex === -1) {
+            value = 1
+            blog.likes.push({ userId });
+        } else {
+            value = 2;
+            blog.likes.splice(userIndex, 1);
+        }
+        await blog.save();
+        res.json({ likesCount: blog.likes.length, value : value });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Server error', error });
+    }
+});
 module.exports = route
