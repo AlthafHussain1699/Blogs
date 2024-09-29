@@ -2,6 +2,9 @@ const { Router } = require("express");
 const multer = require("multer");
 const Blog= require('../models/blog')
 const {Comment} = require('../models/comment')
+const path = require('path')
+const fs = require('fs');
+const { error } = require("console");
 
 const route = Router();
 
@@ -49,10 +52,26 @@ route.post('/updateBlog/:blogId', upload.single('coverImage'), async (req, res)=
 })
 
 route.get('/deleteBlog/:blogId', async (req, res)=>{
+    try{
     const blogId = req.params.blogId
-
+    const blog = await Blog.findById(blogId);
+    if(!blog){
+        res.status(500).send("Blog not found");
+        return ;
+    }
+    const imageUrl = path.join('public', blog.coverImageUrl);
+    fs.unlink(imageUrl, (error)=>{
+        if(error){
+            console.log("Error deleting image"+error);
+            res.status(500).send('Failed to delete the blog Image');
+        }
+    })
     await  Blog.findByIdAndDelete(blogId)
     await  Comment.deleteMany({blogId : blogId})
+}
+catch(err){
+    console.log(err);
+}
     res.redirect(`/`)
 })
 
