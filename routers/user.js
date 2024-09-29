@@ -17,7 +17,10 @@ route.post('/addUser', async (req, res)=>{
     const {name, email, password} = req.body;
     try {
         await User.create({ name, email, password });
-        res.redirect('/');
+        const userDetails = await User.findOne({ email : email});
+        const token = getToken(userDetails);
+        res.cookie("Token", token);
+        res.redirect("/");
     } catch (error) {
         res.render('signUp', {invalid : true});
     }
