@@ -26,10 +26,10 @@ route.post('/addUser', async (req, res)=>{
     }
 })
 
-route.get('/userValidation', async (req, res)=>{
-    const userDetails = await User.findOne({ email : req.query.email });
+route.post('/userValidation', async (req, res)=>{
+    const userDetails = await User.findOne({ email : req.body.email });
     const salt = userDetails.salt
-    const hashPassword = crypto.createHash('sha256', salt).update(req.query.password).digest('hex')
+    const hashPassword = crypto.createHash('sha256', salt).update(req.body.password).digest('hex')
     if(hashPassword === userDetails.password){
         const token = getToken(userDetails);
         res.cookie("Token", token);

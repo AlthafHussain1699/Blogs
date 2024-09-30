@@ -11,7 +11,7 @@
     <div class="container-fluid d-flex justify-content-between">
 
       <div class="d-flex align-items-center">
-        <a class="navbar-brand" href="#">Blogs</a>
+        <a class="navbar-brand" href="/">Blogs</a>
         <% if (locals.user) { %>
           <a class="nav-link text-light ms-3" href="/blog/blogForm">Add Blog</a>
         <% } %>
@@ -49,11 +49,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title text-center">Sign In</h5>
-              <form action= "/user/userValidation" method="GET">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" name = "name"  required>
-                  </div>
+              <form action= "/user/userValidation" method="POST">
                 <div class="form-group">
                   <label for="email">Email address</label>
                   <input type="email" class="form-control" name="email" required>

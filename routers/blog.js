@@ -88,10 +88,15 @@ route.post('/addBlog', upload.single('coverImage'), async (req, res)=>{
 })
 
 route.get('/blogDetails/:blogId', async (req, res)=>{
+    try{
     const blogIdValue = req.params.blogId
     const blogEntity = await Blog.findById(blogIdValue).populate('createdBy').exec();
     const commentEntity = await Comment.find({blogId : blogIdValue}).populate('createdBy').exec();
     res.render('blogDetails', {user : req.user, blog : blogEntity, comments : commentEntity})
+    }
+    catch(err){
+        console.log(err);
+    }
 })
 
 route.post('/search', async (req, res)=>{

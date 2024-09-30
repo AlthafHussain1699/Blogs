@@ -26,9 +26,15 @@
     </div>
     <div class="container mt-3">
         <div class="card">
-            <div class="card-header text-right">
-                <a href="/comment/addCommentForm/<%= blog._id %>" class="btn btn-primary">Comment</a>
-            </div>
+                <div>
+                    <p><strong class = "font-weight-bolder">Comments</strong>(<%= comments.length %>)</p>
+                </div>
+                <form action="/comment/addComment/<%= blog._id %>" method="post">
+                    <div class="form-group">
+                        <input class="form-control" id="commentBody" name="commentBody" placeholder="Add a Comment" required></input>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt">Add</button>
+                </form>
         </div>
     </div>
     

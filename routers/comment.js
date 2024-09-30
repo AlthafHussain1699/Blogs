@@ -39,6 +39,8 @@ route.get('/addCommentForm/:blogId', async (req, res)=>{
 route.post('/addComment/:blogId', async (req, res)=>{
      const blogIdValue = req.params.blogId
      if(!req.body.commentBody)  res.redirect(`/blog/blogDetails/${blogIdValue}`)
+     try{
+    
      await Comment.create({
         comment : req.body.commentBody,
         createdBy : req.user._id,
@@ -48,6 +50,12 @@ route.post('/addComment/:blogId', async (req, res)=>{
      blog.comments += 1;
      await blog.save();
      res.redirect(`/blog/blogDetails/${blogIdValue}`)
+    }
+    catch(err){
+        console.log(err);
+        res.send(err);
+    }
+
 })
 
 
