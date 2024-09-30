@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express');
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -9,12 +11,10 @@ const path = require('path')
 const Blog = require('./models/blog');
 
 
-
-const url = "mongodb://localhost:27017/";
 const port = 3000;
 
 const app = express();
-mongoose.connect(url).then(()=>{console.log("mongodb connected succefully")});
+mongoose.connect(process.env.mongodb_url).then(()=>{console.log("mongodb connected succefully")});
 
 app.use(express.urlencoded({extended : true}))
 app.set('view engine', 'ejs');
@@ -41,6 +41,6 @@ app.get("/", async (req, res) => {
     res.render("home", { user : req.user, blogs : Blogs});
 });
 
-app.listen(port, ()=>{
-    console.log(`sever is running on ${port}`);
+app.listen(process.env.port, ()=>{
+    console.log(`sever is running on ${process.env.port}`);
 })
