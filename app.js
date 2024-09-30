@@ -40,7 +40,6 @@ app.get("/", async (req, res) => {
     }
     res.render("home", { user : req.user, blogs : Blogs});
 });
-const PORT  = process.env.port || 7000 ;
-app.listen(PORT , ()=>{
+app.listen(process.env.port , ()=>{
     console.log(`sever is running on ${process.env.port}`);
 })
