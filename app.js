@@ -25,18 +25,23 @@ app.use("/user", userRoute);
 app.use("/blog", requiredAuthantication("Token"), blogRoute);
 app.use("/comment", commentRoute);
 app.get("/", async (req, res) => {
-    const Blogs = await Blog.find({});
-    for (const blog of Blogs) {
-        const arr = blog.likes.map(like => like.userId.toString());
+    try {
+        const Blogs = await Blog.find({});
+        for (const blog of Blogs) {
+            const arr = blog.likes.map(like => like.userId.toString());
 
-        if (req.user) {
-            const idx = arr.includes(req.user._id.toString()); 
-            blog.like = idx ? 1 : 0; 
-        } else {
-            blog.like = 0;
+            if (req.user) {
+                const idx = arr.includes(req.user._id.toString());
+                blog.like = idx ? 1 : 0;
+            } else {
+                blog.like = 0;
+            }
         }
+        res.render("home", { user: req.user, blogs: Blogs });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
     }
-    res.render("home", { user : req.user, blogs : Blogs});
 });
 app.listen(process.env.port , ()=>{
     console.log(`sever is running on ${process.env.port}`);
