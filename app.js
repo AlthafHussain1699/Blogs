@@ -10,7 +10,6 @@ const { cheakAuthantication, requiredAuthantication } = require('./middlewares/a
 const path = require('path')
 const Blog = require('./models/blog');
 
-
 const port = 3000;
 
 const app = express();
