@@ -19,6 +19,8 @@ app.set('view engine', 'ejs');
 app.use(cookieParser());
 app.use(cheakAuthantication("Token"))
 app.use(express.static(path.resolve('public')));
+app.set('views', path.join(__dirname, 'views'));
+
 
 
 app.use("/user", userRoute);
