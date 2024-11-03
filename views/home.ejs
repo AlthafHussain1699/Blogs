@@ -50,12 +50,17 @@
     <%- include('./partials/script') %>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
     document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('click', function(event) {
             if (event.target.classList.contains('like-btn')) {
+                
+                <% if (!locals.user) { %>
+                    window.location.href = '/user/signIn';
+                    return; 
+                <% } %>
+
                 const blogId = event.target.getAttribute('data-id');
-    
+                
                 fetch(`/blog/like/${blogId}`, {
                     method: 'POST',
                     headers: {
@@ -72,14 +77,13 @@
                     document.getElementById(`like-count-${blogId}`).textContent = data.likesCount;
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.log(error);
                     alert('An error occurred');
                 });
             }
         });
     });
-    
-
 </script>
+
 </body>
 </html>
