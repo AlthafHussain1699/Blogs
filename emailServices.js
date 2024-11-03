@@ -5,7 +5,7 @@ async function sendOtp(email, otp){
         service : 'Gmail',
         auth : {
             user : 'althafhussain1699@gmail.com',
-            pass : 'cjxyccqtawdorhos'
+            pass : process.env.pass_key
         }
     })
 
