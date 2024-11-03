@@ -49,6 +49,11 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title text-center">Sign In</h5>
+              <% if (locals.invalid) { %>
+                <div class="alert alert-danger border border-danger rounded">
+                  <p class="mb-0">Invalid Email or Password</p>
+                </div>   
+              <% } %>  
               <form action= "/user/userValidation" method="POST">
                 <div class="form-group">
                   <label for="email">Email address</label>
