@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     profileImageUrl :{
         type : String,
-        default : "/images/default.jpg"
+        default : "https://firebasestorage.googleapis.com/v0/b/blogs-97029.appspot.com/o/BlogImages%2FDefault.jpg?alt=media&token=b6f2f474-d983-4322-a0ac-e11ee715099d"
     },
     resetOtp : {
         type : String
