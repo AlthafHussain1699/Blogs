@@ -130,7 +130,6 @@ route.post('/addBlog', upload.single('coverImage'), async (req, res) => {
         });
     
         blobStream.on('finish', async () => {
-            
             const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileUpload.name)}?alt=media`;
     
             const { title, body } = req.body;
@@ -206,4 +205,28 @@ route.post('/like/:id', async (req, res) => {
     }
     
 });
+route.get("/full-content/:id", async (req, res)=>{
+    try{
+        const blogIdValue = req.params.id
+        const blogEntity = await Blog.findById(blogIdValue);
+        res.json({ content: blogEntity.body });
+    }
+    catch(error){
+         console.log(error);
+    }
+})
+
+route.get("/less-content/:id", async (req, res)=>{
+    try{
+        const blogIdValue = req.params.id
+        
+        const blogEntity = await Blog.findById(blogIdValue);
+        console.log(blogEntity.body.substring(0, 1000))
+        res.json({ content: blogEntity.body.substring(0, 1000) });
+    }
+    catch(error){
+         console.log(error);
+    }
+})
+
 module.exports = route

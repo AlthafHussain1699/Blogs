@@ -24,11 +24,6 @@
           <div class="form-group mt-2">
             <label for="coverImage">Cover Image</label>
             <input type="file" class="form-control-file" id="coverImage" name="coverImage" accept="image/*">
-            <% if (blog.coverImageUrl) { %>
-              <div class="mt-2">
-                <img src="<%= blog.coverImageUrl %>" alt="Current Cover Image" style="max-width: 100%; height: auto;">
-              </div>
-            <% } %>
           </div>
           <button type="submit" class="btn btn-primary mt-2">Edit</button>
         </form>

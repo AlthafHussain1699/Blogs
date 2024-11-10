@@ -15,7 +15,7 @@ route.get('/updateCommentForm/:commentId', async (req, res)=>{
 
 route.post('/updateComment/:commentId', async (req, res)=>{
     const commentId = req.params.commentId
-    const commentBody = req.body.commentBody
+    const commentBody = req.body.comment
     const filter = {_id : commentId}
     const update = {
         $set : {
@@ -24,10 +24,7 @@ route.post('/updateComment/:commentId', async (req, res)=>{
     }
     const options = { new: true }; 
     const commentEntity = await Comment.findOneAndUpdate(filter, update, options);
-    const blog = await Blog.findById(commentEntity.blogId);
-     blog.comments -= 1;
-     await blog.save();
-    res.redirect(`/blog/blogDetails/${commentEntity.blogId}`)
+    res.json({success : true})
 })
 
 route.get('/addCommentForm/:blogId', async (req, res)=>{
@@ -65,6 +62,9 @@ route.get('/deleteComment/:commentId', async (req, res)=>{
     if(comment.createdBy._id == req.user._id){
         await Comment.findOneAndDelete({_id : commentId})
     }
+    const blog = await Blog.findById(comment.blogId);
+    blog.comments -= 1;
+     await blog.save();
     res.redirect(`/blog/blogDetails/${comment.blogId}`)
 })
 
