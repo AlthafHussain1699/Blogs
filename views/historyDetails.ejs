@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogVerse</title>
+</head>
+<body>  
+    <%- include('./partials/navBar') %>
+    <div class="text-center mt-4">
+        <h1 class="display-4 font-weight-bold text-dark">History</h1>
+    </div>
+    <% userHistory.forEach(history => { %>
+        <div class="d-flex justify-content-between align-items-center mt-3 mb-3 p-4 border rounded shadow-sm bg-light" id="history-<%= history._id %>">
+            <div class="flex-grow-1">
+                <a class="h6 text-dark mb-0 font-weight-bold" href="/blog/blogDetails/<%= history.blogId._id %>"><%= history.blogId.title %></a>
+            </div>
+            <div>
+                <p class="text-muted mb-0"><%= history.visitedAt %></p>
+            </div>
+            <div>
+                <button class="btn btn-danger btn-sm" onclick="deleteHistory('<%= history._id %>')">Delete</button>
+            </div>
+        </div>
+    <% }) %>
+
+    <%- include('./partials/script') %>
+    <script>
+        function deleteHistory(historyId) {
+            console.log("Deleting history with ID:", historyId);
+            fetch(`/history/deleteUserHistory/${historyId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const historyElement = document.getElementById(`history-${historyId}`);
+                    if (historyElement) {
+                        historyElement.remove();
+                    }
+                } else {
+                    alert("Error deleting history");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</body>
+</html>

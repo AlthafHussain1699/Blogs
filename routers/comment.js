@@ -65,7 +65,7 @@ route.get('/deleteComment/:commentId', async (req, res)=>{
     const blog = await Blog.findById(comment.blogId);
     blog.comments -= 1;
      await blog.save();
-    res.redirect(`/blog/blogDetails/${comment.blogId}`)
+     res.json({success : true})
 })
 
 module.exports = route

@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const userRoute = require('./routers/user');
 const blogRoute = require('./routers/blog')
 const commentRoute = require('./routers/comment')
+const historyRoute = require('./routers/history')
 const { cheakAuthantication, requiredAuthantication } = require('./middlewares/authantication');
 const path = require('path')
 const Blog = require('./models/blog');
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/user", userRoute);
 app.use("/blog", requiredAuthantication("Token"), blogRoute);
 app.use("/comment", commentRoute);
+app.use("/history",requiredAuthantication("Token"), historyRoute);
 app.get("/", async (req, res) => {
     try {
         const Blogs = await Blog.find({});

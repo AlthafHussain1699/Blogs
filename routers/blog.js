@@ -7,6 +7,7 @@ const fs = require('fs');
 const { error } = require("console");
 const bucket = require('../firebase');
 const dotenv = require('dotenv');
+const {History} = require('../models/VisitHistory')
 dotenv.config();
 
 const route = Router();
@@ -31,7 +32,6 @@ route.post('/updateBlog/:blogId', upload.single('coverImage'), async (req, res) 
     if (!blog) {
         return res.status(404).send("Blog not found");
     }
-
     try {
        
         const fileName = blog.coverImageUrl.split('/o/')[1].split('?')[0];
@@ -152,17 +152,33 @@ route.post('/addBlog', upload.single('coverImage'), async (req, res) => {
 });
 
 
-route.get('/blogDetails/:blogId', async (req, res)=>{
-    try{
-    const blogIdValue = req.params.blogId
-    const blogEntity = await Blog.findById(blogIdValue).populate('createdBy').exec();
-    const commentEntity = await Comment.find({blogId : blogIdValue}).populate('createdBy').exec();
-    res.render('blogDetails', {user : req.user, blog : blogEntity, comments : commentEntity})
+route.get('/blogDetails/:blogId', async (req, res) => {
+    try {
+        const blogIdValue = req.params.blogId;
+
+        // Find the blog and populate the createdBy field
+        const blogEntity = await Blog.findById(blogIdValue).populate('createdBy').exec();
+        if (!blogEntity) {
+            return res.status(404).send('Blog not found');
+        }
+
+        // Find comments for the blog and populate the createdBy field
+        const commentEntity = await Comment.find({ blogId: blogIdValue }).populate('createdBy').exec();
+
+        // Record the visit in the History schema
+        await History.create({
+            userId: req.user._id,
+            blogId: blogIdValue,
+            visitedAt: new Date()
+        });
+
+        res.render('blogDetails', { user: req.user, blog: blogEntity, comments: commentEntity });
+    } catch (err) {
+        console.error('Error fetching blog details:', err);
+        res.status(500).send('Internal server error');
     }
-    catch(err){
-        console.log(err);
-    }
-})
+});
+
 
 route.post('/search', async (req, res)=>{
     const search = req.body.search;
