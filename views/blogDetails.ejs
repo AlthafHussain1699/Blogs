@@ -22,6 +22,9 @@
             width: auto; 
             height: auto;
           }
+          
+        
+        
     </style>
 </head>
 <body>  
@@ -47,8 +50,10 @@
                     <img src="<%= blog.coverImageUrl %>" class="card-img-top img-fluid  border border-dark rounded" alt="Cover Image for <%= blog.title %>">
                 </div>
                 <div id="blog-content" class="card-text ms-3 mt-3">
-                    <%= blog.body.substring(0, 1000) %>... 
-                    <a href="#" id="read-more" data-id="<%= blog.id %>">Read more</a>
+                    <pre><%= blog.body.substring(0, 1000) %>...
+                        <a href="#" id="read-more" data-id="<%= blog.id %>">Read more</a>
+                     </pre> 
+                   
                 </div>
                   <p class="mt-3 mb-0">
                     <strong>Author:</strong> <%= blog.createdBy.name %> 
@@ -116,7 +121,8 @@
                         const link = `<a href="#" id="${linkId}" data-id="${blogId}">${linkText}</a>`;
         
                         // Update the content with full or truncated text and the toggle link
-                        blogContentDiv.innerHTML = `${data.content} ${link}`;
+                        blogContentDiv.innerHTML = `<pre>${data.content}
+                             ${link}</pre>`;
         
                         // Add event listener for the new Read More / Read Less link
                         document.getElementById(linkId).addEventListener("click", function (event) {
