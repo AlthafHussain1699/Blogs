@@ -8,11 +8,21 @@
 </head>
 <body>  
     <%- include('./partials/navBar') %>
-    <div class="text-center mt-4">
-        <h1 class="display-4 font-weight-bold text-dark">History</h1>
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-3 p-3 mr-2 ml-2">
+        <h4 class="display-5 font-weight-bold text-dark">History</h4>
+        <div>
+            <% if (historyAccess == true) { %>
+                <button class="btn btn-success" id="on" onclick="historyControl(1)">On</button>
+                <button class="btn btn-secondary" id="off" onclick="historyControl(0)">Off</button>
+            <% } else { %>
+                <button class="btn btn-secondary" id="on" onclick="historyControl(1)">On</button>
+                <button class="btn btn-success" id="off" onclick="historyControl(0)">Off</button>
+            <% } %>
+        </div> 
     </div>
+      
     <% userHistory.forEach(history => { %>
-        <div class="d-flex justify-content-between align-items-center mt-3 mb-3 p-4 border rounded shadow-sm bg-light" id="history-<%= history._id %>">
+        <div class="d-flex justify-content-between align-items-center mt-3 mb-3 p-4 mr-2 ml-2 border rounded shadow-sm bg-light" id="history-<%= history._id %>">
             <div class="flex-grow-1">
                 <a class="h6 text-dark mb-0 font-weight-bold" href="/blog/blogDetails/<%= history.blogId._id %>"><%= history.blogId.title %></a>
             </div>
@@ -45,6 +55,38 @@
                 console.error("Error:", error);
             });
         }
+        function historyControl(btn) {
+            const onBtn = document.getElementById('on');
+            const offBtn = document.getElementById('off');
+            console.log(btn);
+            fetch("/history/historyControl", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ on: btn === 1, off: btn !== 1 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if(data.nomodification){
+                    return ;
+                }
+                else if (data.on) {
+                    onBtn.classList.add("btn-success");
+                    onBtn.classList.remove("btn-secondary");
+                    offBtn.classList.add("btn-secondary");
+                    offBtn.classList.remove("btn-success");
+                } else if (data.off) {
+                    offBtn.classList.add("btn-success");
+                    offBtn.classList.remove("btn-secondary");
+                    onBtn.classList.add("btn-secondary");
+                    onBtn.classList.remove("btn-success");
+                }
+            })
+            .catch(error => {
+                console.log("Error:", error);
+            });
+        }
+        
     </script>
 </body>
 </html>

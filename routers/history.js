@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const {History} =  require("../models/VisitHistory")
+const User = require("../models/user")
 const moment = require('moment');
 
 const route = Router();
@@ -10,13 +11,8 @@ route.get('/userHistory', async (req, res) => {
             .populate('blogId')
             .sort({ visitedAt: -1 })
             .exec();
-
-        // Iterate over each history and format the visitedAt field
-        userHistory.forEach(history => {
-            history.visitedAt = moment(history.visitedAt).format('MMM Do YYYY, h:mm A');
-        });
-
-        res.render('historyDetails', { userHistory: userHistory, user: req.user });
+        const user = await User.findById(req.user._id);
+        res.render('historyDetails', { userHistory: userHistory, user: req.user, historyAccess : user.history});
     } catch (error) {
         console.error('Error fetching user history:', error);
         res.status(500).send('Error retrieving history');
@@ -38,4 +34,34 @@ route.get('/deleteUserHistory/:id', async (req, res)=>{
     }
     
 })
+route.post("/historyControl", async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (req.body.on) {
+            if (user.history === true) {
+                return res.json({ nomodification: true });
+            } else {
+                await User.updateOne(
+                    { _id: req.user._id },
+                    { $set: { history: true } }
+                );
+                 return res.json({ on: true });
+            }
+        } else {
+            if (user.history === false) {
+                return res.json({ nomodification: true });
+            } else {
+                await User.updateOne(
+                    { _id: req.user._id },
+                    { $set: { history: false } }
+                );
+                 return res.json({ off: true });
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while updating history status." });
+    }
+});
+
 module.exports = route

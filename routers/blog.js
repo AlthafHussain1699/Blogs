@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const multer = require("multer");
 const Blog= require('../models/blog')
+const User = require('../models/user')
 const {Comment} = require('../models/comment')
 const path = require('path')
 const fs = require('fs');
@@ -156,18 +157,15 @@ route.get('/blogDetails/:blogId', async (req, res) => {
     try {
         const blogIdValue = req.params.blogId;
 
-        // Find the blog and populate the createdBy field
         const blogEntity = await Blog.findById(blogIdValue).populate('createdBy').exec();
         if (!blogEntity) {
             return res.status(404).send('Blog not found');
         }
 
-        // Find comments for the blog and populate the createdBy field
         const commentEntity = await Comment.find({ blogId: blogIdValue }).populate('createdBy').exec();
-
-        // Record the visit in the History schema
+        const user = await User.findById(req.user._id);
         await History.create({
-            userId: req.user._id,
+            userId: (user.history ? user._id : null),
             blogId: blogIdValue,
             visitedAt: new Date()
         });

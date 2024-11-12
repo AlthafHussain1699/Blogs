@@ -9,10 +9,12 @@ const historyRoute = require('./routers/history')
 const { cheakAuthantication, requiredAuthantication } = require('./middlewares/authantication');
 const path = require('path')
 const Blog = require('./models/blog');
+const User = require('./models/user')
 
 
 const app = express();
 mongoose.connect(process.env.mongodb_url).then(()=>{console.log("mongodb connected succefully")});
+
 
 app.use(express.urlencoded({extended : true}))
 app.set('view engine', 'ejs');
