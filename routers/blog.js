@@ -179,13 +179,29 @@ route.get('/blogDetails/:blogId', async (req, res) => {
 
 
 route.post('/search', async (req, res)=>{
-    const search = req.body.search;
-    const blogEntity = await Blog.find({
-        "title" : {
-            $regex : search
+    try {
+        const search = req.body.search;
+        const Blogs = await Blog.find({
+            "title": {
+                $regex: search,
+                $options: "i" 
+            }
+        });
+        for (const blog of Blogs) {
+            const arr = blog.likes.map(like => like.userId.toString());
+
+            if (req.user) {
+                const idx = arr.includes(req.user._id.toString());
+                blog.like = idx ? 1 : 0;
+            } else {
+                blog.like = 0;
+            }
         }
-    })
-    res.render('home', {user : req.user, blogs : blogEntity})
+        res.render("home", { user: req.user, blogs: Blogs });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 route.get('/showMyBlogs', async (req, res)=>{

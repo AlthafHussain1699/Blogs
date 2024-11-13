@@ -25,8 +25,8 @@
           pre {
             font-family: "Monaco", Courier, monospace;
             font-size: 14px;
-            color: #f8f8f2;
-            background-color: #2e2e2e;
+            color: #ffffff; /* White text */
+            background-color: #333333; /* Black background */
             padding: 15px;
             border-radius: 5px;
             white-space: pre-wrap;
@@ -58,7 +58,7 @@
                 </div>
                 <div id="blog-content" class="card-text ms-3 mt-3">
                     <pre><%= blog.body.substring(0, 1000) %>...
-                        <a href="#" id="read-more" data-id="<%= blog.id %>">Read more</a>
+                        <a href="#" id="read-more" data-id="<%= blog.id %>" style = "color:#04ff04;">Read more</a>
                     </pre> 
                 </div>
                 <p class="mt-3 mb-0">
@@ -124,7 +124,7 @@
                     .then(response => response.json())
                     .then(data => {
                         // Create the link (Read more / Read less)
-                        const link = `<a href="#" id="${linkId}" data-id="${blogId}">${linkText}</a>`;
+                        const link = `<a href="#" id="${linkId}" data-id="${blogId}" style = "color:#04ff04;" >${linkText} </a>`;
         
                         // Update the content with full or truncated text and the toggle link
                         blogContentDiv.innerHTML = `<pre>${data.content}
